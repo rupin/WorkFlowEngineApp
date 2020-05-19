@@ -1,0 +1,17 @@
+{
+  "name": "FlowEngine",
+  "displayName": "FlowEngine",
+  "expo": {
+    "name": "FlowEngine",
+    "slug": "FlowEngine",
+    "version": "1.0.0",
+    "platforms": [
+      "ios",
+      "android",
+      "web"
+    ],
+    "assetBundlePatterns": [
+      "**/*"
+    ]
+  }
+}
