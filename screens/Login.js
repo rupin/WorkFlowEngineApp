@@ -1,35 +1,50 @@
 
     import React, { Component } from "react";  
     import { StyleSheet, View, TextInput, Text, Button } from "react-native";  
-      
-    class LoginPage extends Component {  
-      state = {  
+    import { useNavigation } from '@react-navigation/native';
+    import {styles} from "../styles/styles.js"
+    import CommonDataManager from "../utilities/CommonDataManager.js"
+    let commonData = CommonDataManager.getInstance();
+
+    export default class Login extends React.Component {          
+      constructor(props) {
+      //constructor to set default state
+      super(props);
+      this.props=props
+      this.state = {  
         userName: "",  
-        userPassword: ""  
-      }  
+        userPassword: "",
+       
+
+         }  
+      }
+     
       userNameTextChange = (inputText) => {  
-        this.setState({ userName: inputText })  
+        this.setState({ userName: inputText }) 
+
       }  
       
       userPasswordTextChange = (inputText) => {  
         this.setState({ userPassword: inputText })  
       }  
       userLogin = () => {  
-        this.getDataUsingPost()
+        this.getLoginToken()
       }  
 
-    getDataUsingPost(){
+    getLoginToken(){
     //POST json 
+   
     var dataToSend = {};
-    dataToSend.username=this.state.userName
-    dataToSend.password=this.state.userPassword
+    //dataToSend.username=this.state.userName
+    //dataToSend.password=this.state.userPassword
 
-    //making data to send on server
-    
-    //console.log(dataToSend)
+    dataToSend.username="rupin"
+    dataToSend.password="#3Twinkle3#"
+
+   
     
     //POST request 
-    fetch('https://flowengine.herokuapp.com/rest-auth/login/', {
+    fetch(commonData.getBaseURL()+'/rest-auth/login/', {
       method: "POST",//Request Type 
       body: JSON.stringify(dataToSend),
     headers: {
@@ -43,6 +58,16 @@
     .then((responseJson) => {
         //alert(JSON.stringify(responseJson));
         console.log(responseJson);
+        console.log(responseJson.key)
+        if(responseJson.key)
+        {
+          commonData.setToken(responseJson.key)
+          //redirect to create Flow Page
+          console.log(this.props.navigation.navigate("CreateFlow"))
+          //navigation.navigate('Details')
+
+        }
+        
     })
     //If response is not in json then in error
     .catch((error) => {
@@ -51,7 +76,8 @@
     });
   }
       
-      render() {  
+      render() { 
+
         return (  
           <View style={styles.container}>  
             <Text style={styles.txtLogin}>Login to Workflow Manager</Text>  
@@ -80,27 +106,6 @@
       }  
     }  
       
-    const styles = StyleSheet.create({  
-      container: {  
-        flex: 1,  
-        justifyContent: "center",  
-        alignContent: "center",  
-        margin: 10  
-      },  
-      textInputStyle: {  
-        borderColor: '#9a73ef',  
-        borderWidth: 1,  
-        height: 40,  
-        marginLeft: 20,  
-        marginRight: 20,  
-        padding: 10,  
-        marginTop: 8  
-      },  
-      txtLogin: {  
-        padding: 20,  
-        fontWeight: "bold",  
-        fontSize: 20  
-      }  
-    })  
+    
       
-    export default App;  
+  
