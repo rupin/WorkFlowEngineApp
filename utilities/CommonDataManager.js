@@ -2,9 +2,12 @@ export default class CommonDataManager {
 
     static myInstance = null;
 
-    _token = "";
+    _token = null;
 
     _baseURL="https://flowengine.herokuapp.com"
+    
+
+    _headers={}
     /**
      * @returns {CommonDataManager}
      */
@@ -26,5 +29,17 @@ export default class CommonDataManager {
 
     setToken(token) {
         this._token = token;
+    }
+
+    getHeaders()
+    {
+       this._headers["Accept"] ='application/json'
+       this._headers["Content-Type"] ='application/json'
+       if(this._token)
+       {
+        this._headers["Authorization"] ="Token "+ this._token
+       }
+       return this._headers
+      //console.log(this._headers)
     }
 }

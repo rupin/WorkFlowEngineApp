@@ -3,8 +3,9 @@
     import { StyleSheet, View, TextInput, Text, Button } from "react-native";  
     import { useNavigation } from '@react-navigation/native';
     import {styles} from "../styles/styles.js"
+    
     import CommonDataManager from "../utilities/CommonDataManager.js"
-    let commonData = CommonDataManager.getInstance();
+    global.commonData = new CommonDataManager();
 
     export default class Login extends React.Component {          
       constructor(props) {
@@ -44,7 +45,7 @@
    
     
     //POST request 
-    fetch(commonData.getBaseURL()+'/rest-auth/login/', {
+    fetch(global.commonData.getBaseURL()+'/rest-auth/login/', {
       method: "POST",//Request Type 
       body: JSON.stringify(dataToSend),
     headers: {
@@ -61,9 +62,13 @@
         console.log(responseJson.key)
         if(responseJson.key)
         {
-          commonData.setToken(responseJson.key)
+          global.commonData.setToken(responseJson.key)
+
+          //AsyncStorage.setItem('token',responseJson.key);
+          //console.log(AsyncStorage.getItem('token'))
           //redirect to create Flow Page
-          console.log(this.props.navigation.navigate("CreateFlow"))
+          console.log(this.props.navigation.navigate("ViewPendingFlows"))
+
           //navigation.navigate('Details')
 
         }

@@ -6,6 +6,13 @@ const styles = StyleSheet.create({
         alignContent: "center",  
         margin: 10  
       },  
+      listcontainer:
+      {
+        flex: 1,  
+        justifyContent: "flex-start",  
+        alignContent: "center",  
+        margin: 10 
+      },
       textInputStyle: {  
         borderColor: '#9a73ef',  
         borderWidth: 1,  
