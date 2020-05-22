@@ -1,22 +1,34 @@
-import * as React from 'react';
-import { Button, View } from 'react-native';
-import { createDrawerNavigator } from '@react-navigation/drawer';
-import { NavigationContainer } from '@react-navigation/native';
+import React from 'react';
+import { AppLoading } from 'expo';
+import { Container, Text } from 'native-base';
+import * as Font from 'expo-font';
+import { Ionicons } from '@expo/vector-icons';
+import AuthNavigator from  "./authscreens/AuthNavigator.js" 
+export default class App extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      isReady: false,
+    };
+    //console.log(props)
+  }
 
-import Login from './screens/Login';
-import CreateFlow from './screens/CreateFlow.js';
-import  ViewPendingFlows from './screens/ViewPendingFlows.js';
+  async componentDidMount() {
+    await Font.loadAsync({
+      Roboto: require('native-base/Fonts/Roboto.ttf'),
+      Roboto_medium: require('native-base/Fonts/Roboto_medium.ttf'),
+      ...Ionicons.font,
+    });
+    this.setState({ isReady: true });
+  }
 
-const Drawer = createDrawerNavigator();
+  render() {
+    if (!this.state.isReady) {
+      return <AppLoading />;
+    }
 
-export default function App() {
-  return (
-    <NavigationContainer>
-      <Drawer.Navigator initialRouteName="Home">
-        <Drawer.Screen name="Login" component={Login} />
-        <Drawer.Screen name="CreateFlow" component={CreateFlow} />
-        <Drawer.Screen name="ViewPendingFlows" component={ViewPendingFlows} />
-      </Drawer.Navigator>
-    </NavigationContainer>
-  );
+    return (
+      <AuthNavigator/>
+    );
+  }
 }

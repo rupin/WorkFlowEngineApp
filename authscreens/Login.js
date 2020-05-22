@@ -67,7 +67,7 @@
           //AsyncStorage.setItem('token',responseJson.key);
           //console.log(AsyncStorage.getItem('token'))
           //redirect to create Flow Page
-          console.log(this.props.navigation.navigate("ViewPendingFlows"))
+          this.props.navigation.navigate("ViewPendingFlows")
 
           //navigation.navigate('Details')
 
