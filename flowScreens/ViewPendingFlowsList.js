@@ -7,6 +7,8 @@
    import { Container,  ListItem, Header, Spinner, Content, Title, Card, CardItem, Thumbnail, Text, Button, Icon, Left, Body, Right } from 'native-base';
    
 
+   import {ViewFlowDetail} from "../flowScreens/ViewFlowDetail.js"
+  
 
    export default class ViewPendingFlowsList extends Component {          
       constructor(props) 
@@ -28,9 +30,9 @@
         
       }
 
-      viewListDetails=(flow_id)=>
-      {
-        this.props.navigation.navigate('ViewFlowDetail');
+      viewFlowDetail=(flow_id)=>{
+        console.log (flow_id)
+        this.props.navigation.navigate('Flow Information');
       }
      
        
@@ -92,17 +94,15 @@
                         
               <ListItem key={pendingFlow.id} avatar button 
 
-               onPress={() => that.props.navigation.navigate('ViewFlowDetail', { id: pendingFlow.id })} >
+               onPress={()=>that.props.navigation.navigate('Flow Information',{id:pendingFlow.id})} >
               
-              <Left>
-                <Thumbnail source={{ uri: 'Image URL' }} />
-              </Left>
+             
               <Body>
                 <Text>{pendingFlow.flow_name}</Text>
                 <Text note>{pendingFlow.stage.label}</Text>
               </Body>
               <Right>
-              <Button transparent onPress={that.viewListDetails.bind(that, pendingFlow.id)}>
+              <Button transparent onPress={()=>that.props.navigation.navigate('Flow Information', {id:pendingFlow.id})} >
                    <Icon name="arrow-forward" />
               </Button>
               </Right>

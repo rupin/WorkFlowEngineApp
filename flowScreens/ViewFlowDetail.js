@@ -15,6 +15,7 @@
       
       super(props);
       this.props=props;
+      console.log(props.route.params.id)
       this.state={
         pendingFlowData:null,
         fetched:false 

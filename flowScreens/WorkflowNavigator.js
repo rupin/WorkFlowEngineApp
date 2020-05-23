@@ -23,7 +23,7 @@
 
         return (  
               <NavigationContainer independent={true}>
-                <Drawer.Navigator initialRouteName="ViewPendingFlows">
+                <Drawer.Navigator initialRouteName="PendingFlowStack">
                   <Drawer.Screen name="View Pending" component={PendingFlowStack} />
                   <Drawer.Screen name="Create Flow" component={CreateFlow} />      
                 </Drawer.Navigator>
