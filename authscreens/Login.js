@@ -5,9 +5,11 @@
     import {styles} from "../styles/styles.js"
     
     import CommonDataManager from "../utilities/CommonDataManager.js"
-    global.commonData = new CommonDataManager();
 
-    export default class Login extends React.Component {          
+    import WorkflowNavigator from "../flowScreens/WorkflowNavigator.js"
+    
+
+    export default class Login extends Component {          
       constructor(props) {
       //constructor to set default state
       super(props);
@@ -15,6 +17,7 @@
       this.state = {  
         userName: "",  
         userPassword: "",
+        loginState:false
        
 
          }  
@@ -45,6 +48,7 @@
    
     
     //POST request 
+    const that = this;
     fetch(global.commonData.getBaseURL()+'/rest-auth/login/', {
       method: "POST",//Request Type 
       body: JSON.stringify(dataToSend),
@@ -58,16 +62,16 @@
     //If response is in json then in success
     .then((responseJson) => {
         //alert(JSON.stringify(responseJson));
-        console.log(responseJson);
-        console.log(responseJson.key)
+        //console.log(responseJson);
+        //console.log(responseJson.key)
+        //console.log(this);
         if(responseJson.key)
         {
           global.commonData.setToken(responseJson.key)
-
-          //AsyncStorage.setItem('token',responseJson.key);
-          //console.log(AsyncStorage.getItem('token'))
-          //redirect to create Flow Page
-          this.props.navigation.navigate("ViewPendingFlows")
+          //console.log("Setting State")
+          //console.log(that.state);
+           this.setState({loginState: true});
+            
 
           //navigation.navigate('Details')
 
@@ -83,8 +87,17 @@
       
       render() { 
 
-        return (  
-          <View style={styles.container}>  
+         
+
+          if(this.state.loginState)
+          {
+            return <WorkflowNavigator/>
+          }
+          
+          return ( 
+          
+             <View style={styles.container}>  
+             
             <Text style={styles.txtLogin}>Login to Workflow Manager</Text>  
             <TextInput  
               style={styles.textInputStyle}  
@@ -106,7 +119,9 @@
                 onPress={this.userLogin}  
               />  
             </View>  
-          </View>  
+          </View> 
+          
+          
         );  
       }  
     }  

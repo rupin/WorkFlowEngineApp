@@ -1,12 +1,14 @@
 
     import React, { Component } from "react";  
-    import { StyleSheet, View, TextInput, Text, Button } from "react-native";  
+   
     import { useNavigation } from '@react-navigation/native';
     import {styles} from "../styles/styles.js"
     import { AsyncStorage } from 'react-native';
-    import CommonDataManager from "../utilities/CommonDataManager.js"   
+    import CommonDataManager from "../utilities/CommonDataManager.js"  
+    import { Container, Header, Input, Spinner, Content, Title, Card, CardItem, Thumbnail, Text, Button, Icon, Left, Body, Right } from 'native-base';
+    import { DrawerActions } from '@react-navigation/drawer'; 
 
-    export default class CreateFlow extends React.Component {          
+    export default class CreateFlow extends Component {          
       constructor(props) {
       //constructor to set default state
       super(props);
@@ -55,7 +57,7 @@
     .then((responseJson) => {
         alert(JSON.stringify(responseJson));
         //console.log(responseJson);
-        
+        this.props.navigation.navigate()
         
         
     })
@@ -69,24 +71,38 @@
       render() { 
 
         return (  
-          <View style={styles.container}>  
-            <Text style={styles.txtLogin}>Create a New Flow</Text>  
-            
-            <TextInput  
-              style={styles.textInputStyle}  
+           
+
+          <Container>
+           <Header>
+                <Left>
+            <Button transparent
+              onPress={() => this.props.navigation.toggleDrawer()}>
+              <Icon name="menu" />
+            </Button>
+          </Left>
+                <Body>
+                  <Title>Pending Flows</Title>
+                </Body>
+               
+          </Header>
+             <Content>
+
+             <Text >Create a New Flow</Text> 
+             <Input  
+             
               onChangeText={this.flowNameTextChange}  
               placeholder="Project Name"  
                 
             />  
-            
-            <View style={{ margin: 25 }}>  
-              <Button  
+            <Button  
                 title="Create"  
                 color="green"  
                 onPress={this.createNewFlow}  
               />  
-            </View>  
-          </View>  
+              
+             </Content>   
+            </Container>     
         );  
       }  
     }  
