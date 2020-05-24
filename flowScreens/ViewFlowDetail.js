@@ -5,9 +5,9 @@
     import {styles} from "../styles/styles.js"
     import { AsyncStorage } from 'react-native';
    import CommonDataManager from "../utilities/CommonDataManager.js"   
-   import { Container, Header, Spinner, Content, Title, Card, CardItem, Thumbnail, Text, Button, Icon, Left, Body, Right } from 'native-base';
+   import { Container, Header, Form, Picker , Subtitle, Item, Label, Spinner, Content, Title, Input, Card, CardItem, Thumbnail, Text, Button, Icon, Left, Body, Right } from 'native-base';
    import { DrawerActions } from '@react-navigation/drawer';
-
+    
 
     export default class ViewFlowDetail extends Component {          
       constructor(props) 
@@ -15,19 +15,58 @@
       
       super(props);
       this.props=props;
-      console.log(props.route.params.id)
+      this.flow_id=props.route.params.id
+      this.flow_name=props.route.params.flow_name
+      this.transitionID="";
       this.state={
-        pendingFlowData:null,
-        fetched:false 
+        stageFields:null,
+        fetched:false
+        
       }
            
       }
       componentDidMount()
       {
         //console.log("Component Mounted");
-        this.fetchPendingFlows()
+        this.fetchNextTransition()
         
         
+      }
+
+    fetchStageFields=()=>{
+
+        //POST json 
+    //console.log(global.commonData.getHeaders())
+    var dataToSend = {};
+    //dataToSend.username=this.state.userName
+    //dataToSend.password=this.state.userPassword
+
+    
+    
+    //POST request 
+
+    fetch(global.commonData.getBaseURL()+'/FormFieldsByStage/'+this.transitionID, {
+      method: "GET",//Request Type       
+      headers: global.commonData.getHeaders(),
+     
+    })
+    .then((response) => response.json())
+    //If response is in json then in success
+    .then((responseJson) => {
+        //alert(JSON.stringify(responseJson));
+        this.setState({stageFields:responseJson, fetched:true})
+       // console.log(this.state)
+        
+        
+        
+        
+    })
+    //If response is not in json then in error
+    .catch((error) => {
+      //alert(JSON.stringify(error));
+      console.error(error);
+    });
+
       }
      
        
@@ -35,7 +74,7 @@
      
      
 
-    fetchPendingFlows=()=>{
+    fetchNextTransition=()=>{
     //POST json 
     //console.log(global.commonData.getHeaders())
     var dataToSend = {};
@@ -45,7 +84,8 @@
     
     
     //POST request 
-    fetch(global.commonData.getBaseURL()+'/getPendingFlows/', {
+
+    fetch(global.commonData.getBaseURL()+'/getTransition/'+this.flow_id, {
       method: "GET",//Request Type       
       headers: global.commonData.getHeaders(),
      
@@ -54,10 +94,10 @@
     //If response is in json then in success
     .then((responseJson) => {
         //alert(JSON.stringify(responseJson));
-        //console.log(responseJson);
-        this.setState((state) => {
-             return {pendingFlowData: responseJson, fetched:true};
-        });
+        this.transitionID=responseJson[0].transition.source_state.id
+        //alert(this.transitionID)
+        this.fetchStageFields()
+       
         
         
         
@@ -72,51 +112,55 @@
       
       render() { 
         
-         var productList = [];
-          productList.push(<Spinner />)
-          //console.log(this.state.fetched)
+         var fieldList = [];
+          fieldList.push(<Spinner />)
+          console.log(this.state.fetched)
           if (this.state.fetched)
           {
             //console.log("Here")
-            while (productList.length) { productList.pop(); }
-            this.state.pendingFlowData.forEach(function (pendingFlow) {
+            while (fieldList.length) { fieldList.pop(); }
+            this.state.stageFields.forEach(function (fieldDetail) {
+              //console.log(fieldDetail.field.field_type)
+              if(fieldDetail.field.field_type=='TEXT')
+              {
+                fieldList.push(
 
-              //productList=[];
-            productList.push(
+                                  
+                                  <Item stackedLabel>
+                                     <Label>{fieldDetail.field.label}</Label>
+                                      <Input />
+                                  </Item>
+           
+                              )
+              }
 
-                       
-                        
-                          <Card>
-                          <CardItem header bordered>
-                              <Text>{pendingFlow.flow_name}</Text>
-                         </CardItem>
+              if(fieldDetail.field.field_type=='MULTICHOICE')
+              {
+                var dropdownOptions=fieldDetail.field.multichoice_options.split(",")
 
-                        
-                            <CardItem>
-                              <Body>
-                                <Text>
-                                   {pendingFlow.stage.label}
-                                </Text>
-                              </Body>
-                            </CardItem>
+                var optionChoicesList=[]
 
-                             
+                for (var index=0;index<dropdownOptions.length;index++)
+                {
+                  optionChoicesList.push(<Picker.Item label={dropdownOptions[index]} value={dropdownOptions[index]} />)
+                }
 
+                fieldList.push(
 
-                            <CardItem>
-                              
-                              <Right>
-                                <Text note>{pendingFlow.created_at}</Text>
-                              </Right>
+                                
+                                  <Item picker>
+                                  <Label>{fieldDetail.field.label}</Label>
+                                    <Picker mode="dropdown">
 
-                            </CardItem>
+                                     
+                                      {optionChoicesList}
+                                    </Picker>
+                                </Item>
+           
+                              )
+              }
 
-                          </Card>
-                        
-                        
-                           
-               
-            );
+              
 
           })
         }
@@ -134,12 +178,15 @@
             </Button>
           </Left>
                 <Body>
-                  <Title>Pending Flows</Title>
+                  <Title>{this.flow_name}</Title>
+                  <Subtitle>Subtitle</Subtitle>
                 </Body>
                
           </Header>
              <Content>
-               {productList} 
+             <Form>
+               {fieldList} 
+             </Form>   
              </Content>   
             </Container>         
           

@@ -31,7 +31,7 @@
       }
 
       viewFlowDetail=(flow_id)=>{
-        console.log (flow_id)
+        //console.log (flow_id)
         this.props.navigation.navigate('Flow Information');
       }
      
@@ -94,7 +94,7 @@
                         
               <ListItem key={pendingFlow.id} avatar button 
 
-               onPress={()=>that.props.navigation.navigate('Flow Information',{id:pendingFlow.id})} >
+               onPress={()=>that.props.navigation.navigate('Flow Information',{id:pendingFlow.id, flow_name: pendingFlow.flow_name})} >
               
              
               <Body>
