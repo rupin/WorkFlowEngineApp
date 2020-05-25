@@ -1,13 +1,15 @@
 
     import React, { Component } from "react";  
-    import { StyleSheet, View, TextInput, Text, Button } from "react-native";  
+    
     import { useNavigation } from '@react-navigation/native';
-    import {styles} from "../styles/styles.js"
+    
+   
     
     import CommonDataManager from "../utilities/CommonDataManager.js"
 
     import WorkflowNavigator from "../flowScreens/WorkflowNavigator.js"
-    
+    import { Container,Header, Form, Picker , Subtitle, Item, Label, Spinner, Content, Title, Input, Card, CardItem, Thumbnail, Text, Button, Icon, Left, Body, Right } from 'native-base';
+   
 
     export default class Login extends Component {          
       constructor(props) {
@@ -96,31 +98,54 @@
           
           return ( 
           
-             <View style={styles.container}>  
-             
-            <Text style={styles.txtLogin}>Login to Workflow Manager</Text>  
-            <TextInput  
-              style={styles.textInputStyle}  
-              onChangeText={this.userNameTextChange}  
-              placeholder="Enter username"  
-                
-            />  
-            <TextInput  
-              style={styles.textInputStyle}  
-              onChangeText={this.userPasswordTextChange}  
-              placeholder="Enter password"  
-                
-              secureTextEntry={true}  
-            />  
-            <View style={{ margin: 25 }}>  
-              <Button  
-                title="Login"  
-                color="green"  
-                onPress={this.userLogin}  
-              />  
-            </View>  
-          </View> 
-          
+                    <Container style={{justifyContent: 'center',}} >
+                       <Header>
+               <Left>
+               </Left>
+                <Body>
+                  <Title>Login</Title>
+                  
+                </Body>
+               
+          </Header>
+                      <Content >
+                        <Form>
+                        <Card bordered>
+                          
+                          <CardItem >
+                            <Left>
+                          <Text>Username</Text>
+                          </Left>
+                          </CardItem>
+                          <CardItem>
+                            <Input onChangeText={this.userNameTextChange} />  
+                          
+                          </CardItem>
+
+
+
+                          <CardItem>
+                          <Left>
+                          <Text>Password</Text>
+                          </Left>
+                          </CardItem>
+                          <CardItem >  
+                            <Input  onChangeText={this.userPasswordTextChange} secureTextEntry={true} />
+                                                
+                       
+                        </CardItem>
+
+                        <CardItem >
+                           <Button full rounded primary onPress={this.userLogin}><Text>&nbsp;&nbsp;&nbsp;&nbsp;Login&nbsp;&nbsp;&nbsp;&nbsp;</Text></Button>                      
+                       
+                        </CardItem>
+
+                    </Card>
+                     </Form>
+                        
+
+                      </Content>
+                    </Container>
           
         );  
       }  

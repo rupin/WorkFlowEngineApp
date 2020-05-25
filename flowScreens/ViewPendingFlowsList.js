@@ -78,7 +78,7 @@
       render() { 
         
          var productList = [];
-          productList.push(<Spinner/>)
+          productList.push(<Spinner key='1'></Spinner>)
           //console.log(this.state.fetched)
           if (this.state.fetched)
           {

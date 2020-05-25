@@ -5,7 +5,7 @@
     import {styles} from "../styles/styles.js"
     import { AsyncStorage } from 'react-native';
    import CommonDataManager from "../utilities/CommonDataManager.js"   
-   import { Container, Header, Form, Picker , Subtitle, Item, Label, Spinner, Content, Title, Input, Card, CardItem, Thumbnail, Text, Button, Icon, Left, Body, Right } from 'native-base';
+   import { Container, List, Radio, Header, Form, Picker , Subtitle, Item, ListItem, Label, Spinner, Content, Title, Input, Card, CardItem, Thumbnail, Text, Button, Icon, Left, Body, Right } from 'native-base';
    import { DrawerActions } from '@react-navigation/drawer';
     
 
@@ -18,9 +18,11 @@
       this.flow_id=props.route.params.id
       this.flow_name=props.route.params.flow_name
       this.transitionID="";
+      this.stageName=""
       this.state={
         stageFields:null,
-        fetched:false
+        fetched:false,
+        //stageName:""
         
       }
            
@@ -93,8 +95,9 @@
     .then((response) => response.json())
     //If response is in json then in success
     .then((responseJson) => {
-        //alert(JSON.stringify(responseJson));
+       //alert(JSON.stringify(responseJson));
         this.transitionID=responseJson[0].transition.source_state.id
+        this.stageName=responseJson[0].transition.source_state.label
         //alert(this.transitionID)
         this.fetchStageFields()
        
@@ -123,15 +126,20 @@
               //console.log(fieldDetail.field.field_type)
               if(fieldDetail.field.field_type=='TEXT')
               {
-                fieldList.push(
+              
 
-                                  
-                                  <Item stackedLabel>
-                                     <Label>{fieldDetail.field.label}</Label>
+                    fieldList.push(
+                      <Card>
+                        <CardItem header>
+                            <Text>{fieldDetail.field.label}</Text>
+                        </CardItem>
+                        <CardItem>
+
+                            <Item>                                 
                                       <Input />
                                   </Item>
-           
-                              )
+                        </CardItem>
+                    </Card>)
               }
 
               if(fieldDetail.field.field_type=='MULTICHOICE')
@@ -142,20 +150,27 @@
 
                 for (var index=0;index<dropdownOptions.length;index++)
                 {
-                  optionChoicesList.push(<Picker.Item label={dropdownOptions[index]} value={dropdownOptions[index]} />)
+                  
+                   optionChoicesList.push(<Picker.Item label={dropdownOptions[index]} value={dropdownOptions[index]} />)
                 }
-
-                fieldList.push(
+                 console.log(optionChoicesList) 
+                           fieldList.push(
 
                                 
-                                  <Item picker>
-                                  <Label>{fieldDetail.field.label}</Label>
-                                    <Picker mode="dropdown">
-
-                                     
-                                      {optionChoicesList}
-                                    </Picker>
-                                </Item>
+                                 <Card>
+                                  <CardItem header>
+                                      <Text>{fieldDetail.field.label}</Text>
+                                  </CardItem>
+                                  <CardItem>
+                                    
+                                     <Item>                                 
+                                        <Picker mode="dropdown">
+                
+                                          {optionChoicesList}
+                                        </Picker>
+                                    </Item>
+                        </CardItem>
+                    </Card>
            
                               )
               }
@@ -169,7 +184,7 @@
 
         return (  
           
-            <Container>
+            <Container style={{flex:1}}>
            <Header>
                 <Left>
             <Button transparent
@@ -179,12 +194,12 @@
           </Left>
                 <Body>
                   <Title>{this.flow_name}</Title>
-                  <Subtitle>Subtitle</Subtitle>
+                  <Subtitle>{this.stageName}</Subtitle>
                 </Body>
                
           </Header>
              <Content>
-             <Form>
+             <Form style={{flex:1}}>
                {fieldList} 
              </Form>   
              </Content>   
