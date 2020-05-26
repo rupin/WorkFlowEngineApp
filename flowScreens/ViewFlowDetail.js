@@ -21,6 +21,7 @@
       this.stageName=""
       this.state={
         stageFields:null,
+        transitions:null,
         fetched:false,
         //stageName:""
         
@@ -96,9 +97,11 @@
     //If response is in json then in success
     .then((responseJson) => {
        //alert(JSON.stringify(responseJson));
+       //Todo manage multiple transitions
         this.transitionID=responseJson[0].transition.source_state.id
         this.stageName=responseJson[0].transition.source_state.label
         //alert(this.transitionID)
+        this.setState({transitions:responseJson, fetched:false})
         this.fetchStageFields()
        
         
@@ -116,8 +119,9 @@
       render() { 
         
          var fieldList = [];
+         var actionList=[]
           fieldList.push(<Spinner />)
-          console.log(this.state.fetched)
+         // console.log(this.state.fetched)
           if (this.state.fetched)
           {
             //console.log("Here")
@@ -131,15 +135,15 @@
                     fieldList.push(
                       <Card>
                         <CardItem header>
-                            <Text>{fieldDetail.field.label}</Text>
-                        </CardItem>
+                            <Text>{fieldDetail.field.label}</ Text>
+                        </ CardItem>
                         <CardItem>
 
                             <Item>                                 
-                                      <Input />
-                                  </Item>
-                        </CardItem>
-                    </Card>)
+                                      <Input ></ Input>
+                                  </ Item>
+                        </ CardItem>
+                    </ Card>)
               }
 
               if(fieldDetail.field.field_type=='MULTICHOICE')
@@ -153,24 +157,24 @@
                   
                    optionChoicesList.push(<Picker.Item label={dropdownOptions[index]} value={dropdownOptions[index]} />)
                 }
-                 console.log(optionChoicesList) 
+                 //console.log(optionChoicesList) 
                            fieldList.push(
 
                                 
                                  <Card>
                                   <CardItem header>
-                                      <Text>{fieldDetail.field.label}</Text>
-                                  </CardItem>
+                                      <Text>{fieldDetail.field.label}</ Text>
+                                  </ CardItem>
                                   <CardItem>
                                     
                                      <Item>                                 
                                         <Picker mode="dropdown">
                 
                                           {optionChoicesList}
-                                        </Picker>
-                                    </Item>
-                        </CardItem>
-                    </Card>
+                                        </ Picker>
+                                    </ Item>
+                        </ CardItem>
+                    </ Card>
            
                               )
               }
@@ -178,6 +182,49 @@
               
 
           })
+          var stageNames=[]
+          while (actionList.length) { actionList.pop(); }
+          this.state.transitions.forEach(function (transitionObject) {
+
+            //console.log(transitionObject.transition.destination_state)             
+
+                  destinationStageName=transitionObject.transition.destination_state.label
+                  destinationStageID=transitionObject.transition.destination_state.id
+                  
+                   stageNames.push(<Picker.Item label={destinationStageName} value={destinationStageID} />)
+                                 
+                  })
+                            
+
+
+                            actionList.push(
+
+                                
+                                    <Card>
+                                        <CardItem header>
+                                        <Text>Select Action</ Text>
+                                        </ CardItem>
+
+                                        <CardItem>
+
+                                        <Item>                                 
+                                          <Picker mode="dropdown">
+
+                                          {stageNames}
+                                          </ Picker>
+                                        </ Item>
+                                        </ CardItem>
+
+                                        <CardItem footer>
+                                        <Button><Text>Send to {} step</ Text></ Button>
+                                        </ CardItem>
+
+
+                                    </ Card>
+           
+                              )
+
+           /*Translitions Loops*/
         }
         
         
@@ -201,6 +248,7 @@
              <Content>
              <Form style={{flex:1}}>
                {fieldList} 
+               {actionList}
              </Form>   
              </Content>   
             </Container>         
