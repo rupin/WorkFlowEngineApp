@@ -19,6 +19,7 @@
       this.flow_name=props.route.params.flow_name
       this.transitionID="";
       this.stageName=""
+      this.nextStageLabel=""
       this.state={
         stageFields:null,
         transitions:null,
@@ -98,6 +99,9 @@
     .then((responseJson) => {
        //alert(JSON.stringify(responseJson));
        //Todo manage multiple transitions
+       //Always assume the first stage is where the flow should go to.
+        this.nextStageLabel=responseJson[0].transition.destination_state.label  
+       
         this.transitionID=responseJson[0].transition.source_state.id
         this.stageName=responseJson[0].transition.source_state.label
         //alert(this.transitionID)
@@ -196,7 +200,8 @@
                   })
                             
 
-
+                            if (this.state.transitions.length>1)
+                            {
                             actionList.push(
 
                                 
@@ -215,14 +220,18 @@
                                         </ Item>
                                         </ CardItem>
 
-                                        <CardItem footer>
-                                        <Button><Text>Send to {} step</ Text></ Button>
-                                        </ CardItem>
+                                        
 
 
                                     </ Card>
            
                               )
+                          }
+
+                            actionList.push(<Card><CardItem footer>
+                                        <Button><Text>Send to {this.nextStageLabel} step</ Text></ Button>
+                                        </ CardItem></ Card>)
+
 
            /*Translitions Loops*/
         }
